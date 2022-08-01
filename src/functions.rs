@@ -27,11 +27,9 @@ pub mod team {
 
 pub mod schedule {
 
-    use serde_json::json;
-
     use crate::schemas::games::schedule::ScheduleResponse;
 
-    pub fn get_schedule(date: Option<String>) {
+    pub fn get_schedule(date: Option<String>) -> Option<ScheduleResponse> {
 
         let url = match date {
             Some(date) => {
@@ -44,10 +42,6 @@ pub mod schedule {
                 "https://statsapi.mlb.com/api/v1/schedule?sportId=1".to_string()
             }
         };
-
-        println!("{}",url);
-
-        // let url = "https://statsapi.mlb.com/api/v1/schedule?sportId=1";
         
         let response = reqwest::blocking::get(url);
 
@@ -55,33 +49,12 @@ pub mod schedule {
             
             let json_resp: reqwest::Result<ScheduleResponse> = response.json();
             if let Ok(json_resp) = json_resp {
-                let today = json_resp.dates.get(0);
-                if let Some(today) = today {
+                return Some(json_resp)
+            } 
+        } 
 
-                    // all unwrapped
-                    for gm in &today.games {
-                        println!("{:<25} {:^4}{:^4}{:^4}","","R","H","E");
-                        println!(
-                            "{:<25} {:^4}{:^4}{:^4}",
-                            gm.teams.away.get_name(),
-                            gm.teams.away.get_score(),
-                            "",
-                            "",
-                        );
-                        println!(
-                            "{:<25} {:^4}{:^4}{:^4}",
-                            gm.teams.home.get_name(),
-                            gm.teams.home.get_score(),
-                            "",
-                            "",
-                        );
-                        println!("\n");
-                    }
-
-
-                }
-            }
-        }
+        return None
+        
 
     }
 }
