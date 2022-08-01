@@ -15,7 +15,27 @@ pub mod generics {
         pub r#type: String,
         #[pyo3(get, set)]
         pub abbreviation: String
+    }
 
+    #[pyclass]
+    #[derive(Deserialize, Serialize, Debug, Clone)]
+    #[serde(rename_all = "camelCase")]
+    pub struct Dexterity {
+        #[pyo3(get, set)]
+        pub code: String,
+        #[pyo3(get, set)]
+        pub description: String
+    }
+    
+
+    #[pyclass]
+    #[derive(Deserialize, Serialize, Debug, Clone)]
+    #[serde(rename_all = "camelCase")]
+    pub struct PersonStatus {
+        #[pyo3(get,set)]
+        pub code: String,
+        #[pyo3(get,set)]
+        pub description: String
     }
 
     #[pyclass]

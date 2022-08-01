@@ -1,10 +1,11 @@
 mod functions;
 mod schemas;
+mod rosters;
+mod people;
 
 use std::vec;
 use std::time::{Instant};
 // use std::thread::sleep;
-
 
 use reqwest;
 use reqwest::Client;
@@ -15,7 +16,8 @@ type TeamResponse = schemas::team::TeamResponse;
 // type Team = schemas::team::Team;
 fn main() {
     // functions::team::get_team(145);
-    functions::get_schedule(Some(String::from("2022-07-01")));
+    // functions::get_schedule(Some(String::from("2022-07-01")));
+    functions::get_roster(145);
 
 }
 
