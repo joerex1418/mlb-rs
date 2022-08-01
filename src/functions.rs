@@ -1,5 +1,6 @@
 
-// #[allow(unused)]
+#[allow(unused)]
+
 use crate::schemas::team::TeamResponse;
 use crate::schemas::schedule::ScheduleResponse;
 

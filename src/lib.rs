@@ -2,12 +2,14 @@
 // use serde:: {Deserialize, Serialize};
 // use serde_json as sj;
 use pyo3::{prelude::*};
-use pyo3::types::{PyDict};
+// use pyo3::types::{PyDict};
 // use serde_json;
 // use pythonize::{pythonize};
 
 mod functions;
 mod schemas;
+mod rosters;
+mod people;
 
 type ScheduleResponse = schemas::schedule::ScheduleResponse;
 
@@ -48,8 +50,6 @@ fn testing() -> Py<PyAny> {
     };
 
     name_info.into_py(py)
-
-
 }
 
 // Get the schedule & scores of all games for the current date

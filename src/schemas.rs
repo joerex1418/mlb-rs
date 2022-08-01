@@ -1,9 +1,22 @@
 pub mod generics {
     use pyo3::prelude::*;
-    use pyo3::types as types;
-
+    // use pyo3::types as types;
     use serde::{Deserialize, Serialize};
     // use pyo3::types::*;
+    
+    #[pyclass]
+    #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+    pub struct Position {
+        #[pyo3(get, set)]
+        pub code: String,
+        #[pyo3(get, set)]
+        pub name: String,
+        #[pyo3(get, set)]
+        pub r#type: String,
+        #[pyo3(get, set)]
+        pub abbreviation: String
+
+    }
 
     #[pyclass]
     #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
