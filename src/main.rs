@@ -1,4 +1,6 @@
+mod functions;
 mod schemas;
+
 use std::vec;
 use std::time::{Instant};
 // use std::thread::sleep;
@@ -8,34 +10,12 @@ use reqwest;
 use reqwest::Client;
 
 #[allow(unused)]
-// #[warn(unused)]
 
 type TeamResponse = schemas::team::TeamResponse;
-type Team = schemas::team::Team;
+// type Team = schemas::team::Team;
 fn main() {
-    
-    // let team_id: u16 = 145;
-
-    // let url = format!(
-    //     "https://statsapi.mlb.com/api/v1/teams/{team_id}",
-    //     team_id = team_id.to_string());
-
-    // let response = reqwest::blocking::get(url);
-
-    // if let Ok(response) = response {
-
-    //     let resp_obj: reqwest::Result<TeamResponse> = response.json();
-
-    //     if let Ok(json) = resp_obj {
-    //         println!("{:#?}", json);
-    //     }
-
-    // };
-
-    // println!("Now we're gonna try an ASYNC request!\n");
-
-    multiple_requests();
-
+    // functions::team::get_team(145);
+    functions::schedule::get_schedule(Some(String::from("2022-07-01")));
 
 }
 
