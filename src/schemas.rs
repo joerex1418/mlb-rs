@@ -1,5 +1,4 @@
 
-
 pub mod generics {
     use serde::{Deserialize, Serialize};
 

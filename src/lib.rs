@@ -3,9 +3,15 @@
 // use serde_json as sj;
 use pyo3::prelude::*;
 
+
 #[pyfunction]
 fn say_hello() -> PyResult<String> {
     Ok("Hello".to_string())
+}
+
+#[pyfunction]
+fn get_schedule() {
+    
 }
 
 #[pymodule]

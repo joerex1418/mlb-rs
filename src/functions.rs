@@ -1,9 +1,9 @@
-// use reqwest;
-// use std:: vec;
+
 #[allow(unused)]
 
-
 pub mod team {
+    // use crate::TeamResponse;
+
     use crate::TeamResponse;
 
     pub fn get_team(team_id: usize) {
