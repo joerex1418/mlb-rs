@@ -9,10 +9,10 @@ fn say_hello() -> PyResult<String> {
     Ok("Hello".to_string())
 }
 
-#[pyfunction]
-fn get_schedule() {
+// #[pyfunction]
+// fn get_schedule() {
     
-}
+// }
 
 #[pymodule]
 fn mlbapi(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
