@@ -15,23 +15,24 @@ type ScheduleResponse = schemas::schedule::ScheduleResponse;
 #[derive(Clone)]
 struct NameInfo {
     #[pyo3(get,set)]
-    details: Details
+    pub details: Details
 }
 
 #[pymethods]
 impl NameInfo {
-
+    pub fn get_first_name(&self) -> String {
+        self.details.first.clone()
+    }
 }
 
 #[pyclass]
 #[derive(Clone)]
 struct Details {
     #[pyo3(get, set)]
-    first: String,
+    pub first: String,
     #[pyo3(get, set)]
-    last: String
+    pub last: String
 }
-
 
 #[pyfunction]
 fn testing() -> Py<PyAny> {
@@ -41,12 +42,12 @@ fn testing() -> Py<PyAny> {
         first: "Joe".to_string(),
         last: "Rechenmacher".to_string(),
     };
-    // println!("Rust object:");
-    // println!("{:#?}", team);
 
-    // println!("Python object:");
+    let name_info = NameInfo {
+        details: details
+    };
 
-    details.into_py(py)
+    name_info.into_py(py)
 
 
 }

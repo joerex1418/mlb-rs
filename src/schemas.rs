@@ -1,4 +1,3 @@
-
 pub mod generics {
     use pyo3::prelude::*;
     use pyo3::types as types;
