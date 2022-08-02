@@ -2,8 +2,7 @@ use pyo3::prelude::*;
 use serde::{Deserialize,Serialize};
 
 use crate::objects::schemas::{
-    generics::{Position, TeamGeneric}, 
-    team::LeagueGeneric
+    generics::{Position, TeamGeneric,LeagueGeneric}
 };
 
 use super::generic::GenericStats;

@@ -1,3 +1,4 @@
+use chrono::Datelike;
 #[allow(unused)]
 #[allow(dead_code)]
 
@@ -5,13 +6,17 @@ use pyo3::IntoPy;
 
 use crate::{
     objects::people::{PersonResponse, Person},
-    objects::schemas::schedule::ScheduleResponse,
-    objects::schemas::team::TeamResponse
+    objects::schemas::{
+        team::{TeamResponse,Team},
+        standings::StandingsResponse,
+        schedule::ScheduleResponse
+    },
+    utils::BASE,
 };
 use crate::objects::rosters::RosterResponse;
 
 #[allow(unused)]
-pub fn get_team(team_id: usize) {
+pub fn get_team(team_id: usize) -> Option<Team> {
     let url: String = format!(
         "https://statsapi.mlb.com/api/v1/teams/{team_id}",
 
@@ -21,12 +26,15 @@ pub fn get_team(team_id: usize) {
     let response = reqwest::blocking::get(url);
 
     if let Ok(response) = response {
-        let json_resp: reqwest::Result<TeamResponse> = response.json();
+        let team_response: reqwest::Result<TeamResponse> = response.json();
 
-        if let Ok(json_resp) = json_resp {
-            println!("{:#?}", json_resp);
-        }
-    }
+        if let Ok(team_response) = team_response {
+            let team = team_response.teams.get(0).unwrap();
+            return Some(team.to_owned());
+        };
+    };
+
+    None
 }
 
 #[allow(unused)]
@@ -77,7 +85,6 @@ pub fn get_roster(team_id: usize) -> Option<RosterResponse> {
 
 #[allow(unused)]
 pub fn get_schedule(date: Option<String>) -> Option<ScheduleResponse> {
-
     let url = match date {
         Some(date) => {
             format!(
@@ -102,5 +109,37 @@ pub fn get_schedule(date: Option<String>) -> Option<ScheduleResponse> {
 
     return None
     
+
+}
+
+#[allow(unused)]
+pub fn get_league_standings(season:Option<usize>) {
+    // pub fn get_league_standings(season:Option<usize>) -> Option<LeagueStandingsResponse> {
+    // hydrate=league,division
+    
+    let url: String = match season {
+        Some(season) => {
+            format!(
+                "{base}/api/v1/standings?season={season}&leagueId=103,104&standingsType=byDivision&hydrate=league,division",
+                base = BASE,
+                season = season.to_string(),
+            )
+        }
+        None => {
+            format!(
+                "{base}/api/v1/standings?season={season}&leagueId=103,104&standingsType=byDivision&hydrate=league,division",
+                base = BASE,
+                season = chrono::Utc::now().year()
+            )
+        }
+    };
+
+    let response = reqwest::blocking::get(url);
+
+    if let Ok(resp) = response {
+        let standings_resp: reqwest::Result<StandingsResponse> = resp.json();
+        println!("{:#?}",standings_resp);
+    }
+
 
 }

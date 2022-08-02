@@ -1,12 +1,9 @@
-
 use pyo3::prelude::*;
 use serde::{Deserialize, Serialize};
-
 use crate::objects::{
     people::PersonGeneric,
     schemas::generics::{Position,PersonStatus}
 };
-
 
 #[pyclass]
 #[derive(Deserialize, Serialize, Debug, Clone)]

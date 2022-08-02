@@ -1,8 +1,6 @@
 pub mod generics {
     use pyo3::prelude::*;
-    // use pyo3::types as types;
     use serde::{Deserialize, Serialize};
-    // use pyo3::types::*;
     
     #[pyclass]
     #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -27,7 +25,6 @@ pub mod generics {
         pub description: String
     }
     
-
     #[pyclass]
     #[derive(Deserialize, Serialize, Debug, Clone)]
     #[serde(rename_all = "camelCase")]
@@ -51,7 +48,58 @@ pub mod generics {
 
     #[pyclass]
     #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-    pub struct MlbGeneric {
+    pub struct LeagueCompact {
+        id: usize,
+        name: Option<String>
+    }
+    impl LeagueCompact {
+        pub fn get_league_name(&self) -> String {
+            match self.id {
+                103 => {
+                    return "American League".to_string();
+                }
+                104 => {
+                    return "National League".to_string();
+                }
+                200 => {
+                    return "American League West".to_string();
+                }
+                201 => {
+                    return "American League East".to_string();
+                }
+                202 => {
+                    return "American League Central".to_string();
+                }
+                203 => {
+                    return "National League West".to_string();
+                }
+                204 => {
+                    return "National League East".to_string();
+                }
+                205 => {
+                    return "National League Central".to_string();
+                }
+                _ => {
+                    return "".to_string();
+                }
+            }
+        }
+    }
+
+    #[pyclass]
+    #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+    pub struct LeagueGeneric {
+        #[pyo3(get, set)]
+        pub id: usize,
+        #[pyo3(get, set)]
+        pub name: String,
+        #[pyo3(get, set)]
+        pub link: String,
+    }
+
+    #[pyclass]
+    #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+    pub struct MlbCompact {
         #[pyo3(get, set)]
         pub id: usize,
         #[pyo3(get, set)]
@@ -59,17 +107,27 @@ pub mod generics {
         #[pyo3(get, set)]
         pub link: Option<String>
     }
+
+    #[pyclass]
+    #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+    pub struct MlbGeneric {
+        #[pyo3(get, set)]
+        pub id: usize,
+        #[pyo3(get, set)]
+        pub name: String,
+        #[pyo3(get, set)]
+        pub link: String
+    }
 }
     
 pub mod team {
     use pyo3::prelude::*;
     use serde::{Deserialize, Serialize};
-    
+    use crate::utils::BASE;
+
     #[pyclass]
     #[derive(Deserialize, Serialize, Debug, Clone, PartialEq)]
     pub struct TeamResponse {
-        #[pyo3(get, set)]
-        pub copyright: String,
         #[pyo3(get, set)]
         pub teams: Vec<Team>
     }
@@ -79,7 +137,7 @@ pub mod team {
     #[serde(rename_all = "camelCase")]
     pub struct Team {
         #[pyo3(get, set)]
-        pub id: u16,
+        pub id: usize,
         #[pyo3(get, set)]
         pub name: String,
         #[pyo3(get, set)]
@@ -87,9 +145,9 @@ pub mod team {
         #[pyo3(get, set)]
         pub season: usize,
         #[pyo3(get, set)]
-        pub venue: super::generics::MlbGeneric,
+        pub venue: super::generics::MlbCompact,
         #[pyo3(get, set)]
-        pub league: LeagueGeneric,
+        pub league: super::generics::LeagueGeneric,
         #[pyo3(get, set)]
         pub team_code: String,
         #[pyo3(get, set)]
@@ -110,18 +168,36 @@ pub mod team {
         pub first_year_of_play: String,
     }
 
-    #[pyclass]
-    #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-    pub struct LeagueGeneric {
-        #[pyo3(get, set)]
-        pub id: usize,
-        #[pyo3(get, set)]
-        pub name: String,
-        #[pyo3(get, set)]
-        pub link: String,
+    #[pymethods]
+    impl Team {
+        pub fn get_roster_hitting(&self,season:Option<usize>) {
+
+            let query_path: String = match season {
+                Some(season) => {
+                    format!(
+                        "stats=season&season={season}&group=hitting",
+                        season = season
+                    )
+                }
+                None => {
+                    format!(
+                        "stats=season&season={season}&group=hitting",
+                        season = self.season.to_string()
+                    )
+                }
+            };
+
+            let url: String = format!(
+                "{base}/api/v1/teams/{team_id}/stats?{query_path}",
+                base = BASE,
+                team_id = self.id.to_string(),
+                query_path = query_path,
+            );
+
+            println!("{}",url);
+
+        }
     }
-
-
 
 }
 
@@ -195,7 +271,7 @@ pub mod schedule {
         pub home: Team,
     }
 
-    
+    #[pymethods]
     impl Teams {
         pub fn get_away_score(&self) -> usize {
             if let Some(score) = self.away.score {
@@ -257,6 +333,36 @@ pub mod schedule {
         pub pct: String
     }
     
+
+}
+
+pub mod standings {
+    use pyo3::prelude::*;
+    use serde::{Deserialize, Serialize};
+
+    use super::generics::LeagueCompact;
+
+    #[pyclass]
+    #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+    #[serde(rename_all = "camelCase")]
+    pub struct StandingsResponse {
+        records: Vec<Record>
+    }
+
+    #[pyclass]
+    #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+    #[serde(rename_all = "camelCase")]
+    pub struct Record {
+        #[pyo3(get,set)]
+        standings_type: String,
+        #[pyo3(get,set)]
+        league: LeagueCompact,
+        #[pyo3(get,set)]
+        division: Option<LeagueCompact>,
+        #[pyo3(get,set)]
+        last_updated: String,
+
+    }
 
 }
 

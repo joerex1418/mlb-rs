@@ -61,7 +61,6 @@ fn get_roster(team_id:usize) -> Option<Py<PyAny>> {
     }
 
     None
-    // roster.into_py(py)
 }
 
 // Get the schedule & scores of all games for the current date

@@ -1,23 +1,25 @@
+
 mod utils;
 mod functions;
 mod objects;
-// mod people;
 mod stats;
 
 use std::vec;
 use std::time::{Instant};
-// use std::thread::sleep;
-
 use reqwest;
 use reqwest::Client;
+// use std::thread::sleep;
 
-#[allow(unused)]
-#[allow(dead_code)]
+#[allow(unused_imports)]
+use objects::schemas::{
+    team::{TeamResponse,Team}
+};
 
-type TeamResponse = objects::schemas::team::TeamResponse;
-// type Team = schemas::team::Team;
 fn main() {
-    functions::get_roster(145);
+    // let team:Option<Team> = functions::get_team(145);
+    // println!("{:#?}",team);
+    functions::get_league_standings(Some(2022));
+
 }
 
 #[allow(unused)]
