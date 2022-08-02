@@ -2,6 +2,7 @@ mod functions;
 mod schemas;
 mod rosters;
 mod people;
+mod stats;
 
 use std::vec;
 use std::time::{Instant};
@@ -11,6 +12,7 @@ use reqwest;
 use reqwest::Client;
 
 #[allow(unused)]
+#[allow(dead_code)]
 
 type TeamResponse = schemas::team::TeamResponse;
 // type Team = schemas::team::Team;

@@ -16,5 +16,6 @@ openssl = { version = "0.10", features = ["vendored"] }
 tokio = { version = "1", features = ["full"] }
 serde = { version = "*", features = ["derive"] }
 serde_json = { version = "1.0" }
+chrono = "0.4"
 # pythonize = { version = "0.16.0" }
 

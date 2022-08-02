@@ -1,7 +1,10 @@
 use pyo3::prelude::*;
 use serde::{Deserialize, Serialize};
+use chrono::{Date,DateTime, Datelike};
 
 use crate::schemas::generics::{Position, Dexterity};
+
+const BASE: &str = "https://statsapi.mlb.com";
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -28,7 +31,7 @@ pub struct Person {
     #[pyo3(get,set)]
     pub birth_date: String,
     #[pyo3(get,set)]
-    pub current_age: i64,
+    pub current_age: usize,
     #[pyo3(get,set)]
     pub birth_city: Option<String>,
     #[pyo3(get,set)]
@@ -58,7 +61,7 @@ pub struct Person {
     #[pyo3(get,set)]
     pub is_verified: bool,
     #[pyo3(get,set)]
-    pub draft_year: usize,
+    pub draft_year: Option<usize>,
     #[pyo3(get,set)]
     pub pronunciation: String,
     #[pyo3(get,set)]
@@ -81,14 +84,66 @@ pub struct Person {
     pub init_last_name: String,
     #[pyo3(get,set)]
     #[serde(rename = "fullFMLName")]
-    pub full_fmlname: String,
+    pub full_fml_name: String,
     #[pyo3(get,set)]
     #[serde(rename = "fullLFMName")]
-    pub full_lfmname: String,
+    pub full_lfm_name: String,
     #[pyo3(get,set)]
     pub strike_zone_top: f64,
     #[pyo3(get,set)]
     pub strike_zone_bottom: f64,
+}
+
+#[pymethods]
+impl Person {
+    fn get_stats(&self,stat_type:&str,season:Option<usize>,groups:Option<Vec<String>>) {
+
+        let group_param = match groups {
+            Some(groups) => {
+                groups.join(",")
+            }
+            None => {
+                String::from("hitting,pitching,fielding")
+            }
+        };
+
+        let query_path: String = match season {
+            Some(season) => {
+                format!(
+                    "season={season}&stats={stat_type}&group={group_param}",
+                    season = season.to_string(),
+                    stat_type = stat_type,
+                    group_param = group_param
+                )
+            }
+            None => {
+                format!(
+                    "season={season}&stats={stat_type}&group={group_param}",
+                    season = chrono::Utc::now().year(),
+                    stat_type = stat_type,
+                    group_param = group_param,
+                )
+            }
+        };
+
+        let url: String = format!(
+            "{base}/api/v1/people/{person_id}/stats?{query_path}",
+            base = BASE,
+            person_id = self.id.to_string(),
+            query_path = query_path,
+        );
+
+
+        let response = reqwest::blocking::get(url);
+
+        if let Ok(response) = response {
+            if let Ok(response_text) = response.text() {
+                println!("{:#}",response_text);
+            }
+        }
+
+
+    }   
 }
 
 #[pyclass]

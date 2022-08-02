@@ -1,12 +1,12 @@
 // use reqwest::Response;
 // use reqwest::Error;
+#[allow(unused)]
+#[allow(dead_code)]
 
 use pyo3::IntoPy;
 use reqwest::Request;
 
 use crate::people::{PersonResponse, Person};
-#[allow(unused)]
-#[allow(dead_code)]
 
 use crate::schemas::team::TeamResponse;
 use crate::{schemas::schedule::ScheduleResponse};
@@ -37,14 +37,13 @@ pub fn get_person(person_id: usize) -> Option<Person> {
 
     let response = reqwest::blocking::get(url);
 
+    
+
     if let Ok(response) = response {
         let json_resp: reqwest::Result<PersonResponse> = response.json();
 
         if let Ok(person_resp_obj) = json_resp {
             if let Some(person_obj) = person_resp_obj.people.get(0) {
-                // let py_person = person_obj.into_py(py);
-                // let py_person = person_obj;
-                // return Some(py_person.clone());
                 return Some(person_obj.to_owned());
             };
         };

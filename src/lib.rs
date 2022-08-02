@@ -12,47 +12,13 @@ mod functions;
 mod schemas;
 mod rosters;
 mod people;
+mod stats;
 
 type ScheduleResponse = schemas::schedule::ScheduleResponse;
 
-#[pyclass]
-#[derive(Clone)]
-struct NameInfo {
-    #[pyo3(get,set)]
-    pub details: Details
-}
-
-#[pymethods]
-impl NameInfo {
-    pub fn get_first_name(&self) -> String {
-        self.details.first.clone()
-    }
-}
-
-#[pyclass]
-#[derive(Clone)]
-struct Details {
-    #[pyo3(get, set)]
-    pub first: String,
-    #[pyo3(get, set)]
-    pub last: String
-}
-
 #[pyfunction]
-fn testing() -> Py<PyAny> {
-    let python: GILGuard = Python::acquire_gil();
-    let py: Python = python.python();
+fn testing() {
 
-    let details: Details = Details {
-        first: "Joe".to_string(),
-        last: "Rechenmacher".to_string(),
-    };
-
-    let name_info: NameInfo = NameInfo {
-        details: details
-    };
-
-    name_info.into_py(py)
 }
 
 // Get bio data for a specific person
@@ -90,6 +56,8 @@ fn get_schedule() -> Py<PyAny> {
 
 #[pymodule]
 fn mlbapi(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
+    m.add_class::<Person>()?;
+    // m.add_class::<Person>;
     m.add_function(wrap_pyfunction!(testing, m)?)?;
     m.add_function(wrap_pyfunction!(get_person, m)?)?;
     m.add_function(wrap_pyfunction!(get_roster, m)?)?;
