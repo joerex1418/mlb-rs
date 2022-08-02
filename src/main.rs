@@ -1,3 +1,4 @@
+mod utils;
 mod functions;
 mod schemas;
 mod rosters;
@@ -20,6 +21,7 @@ fn main() {
     functions::get_roster(145);
 }
 
+#[allow(unused)]
 #[tokio::main]
 async fn multiple_requests() {
     let now = Instant::now();

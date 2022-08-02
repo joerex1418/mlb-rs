@@ -9,9 +9,11 @@ use crate::schemas::team::TeamResponse;
 use crate::{schemas::schedule::ScheduleResponse};
 use crate::rosters::RosterResponse;
 
+#[allow(unused)]
 pub fn get_team(team_id: usize) {
     let url: String = format!(
         "https://statsapi.mlb.com/api/v1/teams/{team_id}",
+
         team_id = team_id.to_string()
     );
 
@@ -26,6 +28,7 @@ pub fn get_team(team_id: usize) {
     }
 }
 
+#[allow(unused)]
 pub fn get_person(person_id: usize) -> Option<Person> {
     let url: String = format!(
         "https://statsapi.mlb.com/api/v1/people/{person_id}",
@@ -50,6 +53,7 @@ pub fn get_person(person_id: usize) -> Option<Person> {
 
 }
 
+#[allow(unused)]
 pub fn get_roster(team_id: usize) -> Option<RosterResponse> {
     
     let url: String = format!(
@@ -64,13 +68,13 @@ pub fn get_roster(team_id: usize) -> Option<RosterResponse> {
         if let Ok(roster_obj) = json_resp {
             return Some(roster_obj)
         }
-
     }
 
     None
 
 }
 
+#[allow(unused)]
 pub fn get_schedule(date: Option<String>) -> Option<ScheduleResponse> {
 
     let url = match date {

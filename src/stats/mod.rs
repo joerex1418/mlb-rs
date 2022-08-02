@@ -1,2 +1,2 @@
 pub mod generic;
-pub mod stat_types;
+pub mod stats;

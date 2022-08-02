@@ -1,7 +1,12 @@
 use pyo3::prelude::*;
 use serde::{Deserialize,Serialize};
 
-use crate::schemas::{generics::{Position, TeamGeneric}, team::LeagueGeneric};
+use crate::schemas::{
+    generics::{Position, TeamGeneric}, 
+    team::LeagueGeneric
+};
+
+use super::generic::GenericStats;
 
 #[pyclass]
 #[derive(Deserialize, Serialize, Debug, Clone)]
@@ -18,7 +23,9 @@ pub struct StatEntry {
     #[serde(rename = "type")]
     _type: GroupType,
     #[serde(rename = "group")]
-    _group: GroupType
+    _group: GroupType,
+    #[pyo3(get,set)]
+    splits: Vec<Split>,
 
 }
 
@@ -37,11 +44,17 @@ impl StatEntry {
 #[derive(Deserialize, Serialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Split {
+    #[pyo3(get,set)]
     pub season: String,
-    // pub stat: Stat,
+    #[pyo3(get,set)]
+    pub stat: GenericStats,
+    #[pyo3(get,set)]
     pub team: TeamGeneric,
-    pub game_type: String,
+    #[pyo3(get,set)]
+    pub game_type: Option<String>,
+    #[pyo3(get,set)]
     pub league: LeagueGeneric,
+    #[pyo3(get,set)]
     pub position: Option<Position>,
 
 }
@@ -56,249 +69,6 @@ pub mod types {
     use pyo3::prelude::*;
     use serde::{Deserialize, Serialize};
     use crate::schemas::generics::Position;
-    
-    #[pyclass]
-    #[derive(Deserialize, Serialize, Debug, Clone)]
-    #[serde(rename_all = "camelCase")]
-    pub struct GenericStats {
-        #[pyo3(get,set)]
-        pub games_played: i64,
-
-        #[pyo3(get,set)]
-        pub games_started: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub runs: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub home_runs: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub strike_outs: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub base_on_balls: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub hits: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub hit_by_pitch: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub avg: Option<String>,
-
-        #[pyo3(get,set)]
-        pub at_bats: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub obp: Option<String>,
-
-        #[pyo3(get,set)]
-        pub era: Option<String>,
-
-        #[pyo3(get,set)]
-        pub innings_pitched: Option<String>,
-
-        #[pyo3(get,set)]
-        pub wins: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub losses: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub saves: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub earned_runs: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub whip: Option<String>,
-
-        #[pyo3(get,set)]
-        pub batters_faced: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub outs: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub games_pitched: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub complete_games: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub shutouts: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub hit_batsmen: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub balks: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub wild_pitches: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub win_percentage: Option<String>,
-
-        #[pyo3(get,set)]
-        pub games_finished: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub strikeout_walk_ratio: Option<String>,
-
-        #[pyo3(get,set)]
-        #[serde(rename = "strikeoutsPer9Inn")]
-        pub strikeouts_per9inn: Option<String>,
-
-        #[pyo3(get,set)]
-        #[serde(rename = "walksPer9Inn")]
-        pub walks_per9inn: Option<String>,
-
-        #[pyo3(get,set)]
-        #[serde(rename = "hitsPer9Inn")]
-        pub hits_per9inn: Option<String>,
-
-        #[pyo3(get,set)]
-        pub runs_scored_per9: Option<String>,
-
-        #[pyo3(get,set)]
-        pub home_runs_per9: Option<String>,
-
-        #[pyo3(get,set)]
-        pub ground_outs: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub air_outs: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub doubles: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub triples: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub intentional_walks: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub slg: Option<String>,
-
-        #[pyo3(get,set)]
-        pub ops: Option<String>,
-
-        #[pyo3(get,set)]
-        pub caught_stealing: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub stolen_bases: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub stolen_base_percentage: Option<String>,
-
-        #[pyo3(get,set)]
-        pub ground_into_double_play: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub number_of_pitches: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub save_opportunities: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub holds: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub blown_saves: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub strikes: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub strike_percentage: Option<String>,
-
-        #[pyo3(get,set)]
-        pub pickoffs: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub total_bases: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub ground_outs_to_airouts: Option<String>,
-
-        #[pyo3(get,set)]
-        pub pitches_per_inning: Option<String>,
-
-        #[pyo3(get,set)]
-        pub inherited_runners: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub inherited_runners_scored: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub catchers_interference: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub sac_bunts: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub sac_flies: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub plate_appearances: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub rbi: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub left_on_base: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub babip: Option<String>,
-
-        #[pyo3(get,set)]
-        pub at_bats_per_home_run: Option<String>,
-
-        #[pyo3(get,set)]
-        pub assists: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub put_outs: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub errors: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub chances: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub fielding: Option<String>,
-
-        #[pyo3(get,set)]
-        pub position: Option<Position>,
-
-        #[pyo3(get,set)]
-        pub range_factor_per_game: Option<String>,
-
-        #[pyo3(get,set)]
-        #[serde(rename = "rangeFactorPer9Inn")]
-        pub range_factor_per9inn: Option<String>,
-
-        #[pyo3(get,set)]
-        pub innings: Option<String>,
-
-        #[pyo3(get,set)]
-        pub games: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub double_plays: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub triple_plays: Option<i64>,
-
-        #[pyo3(get,set)]
-        pub throwing_errors: Option<i64>,
-    }
 
     #[pyclass]
     #[derive(Deserialize, Serialize, Debug, Clone)]

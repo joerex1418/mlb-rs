@@ -1,13 +1,11 @@
 use pyo3::prelude::*;
 use serde::{Deserialize, Serialize};
-use chrono::{Date,DateTime, Datelike};
+use chrono::{Datelike};
 
 // use crate::stats;
+use crate::utils::*;
 use crate::schemas::generics::{Position, Dexterity};
-use crate::stats::stat_types::StatsResponse;
-
-const BASE: &str = "https://statsapi.mlb.com";
-
+use crate::stats::stats::StatsResponse;
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -141,7 +139,7 @@ impl Person {
         );
 
         let response = reqwest::blocking::get(url);
-
+        
         if let Ok(response) = response {
             let stat_resp: reqwest::Result<StatsResponse> = response.json();
             if let Ok(stat_resp) = stat_resp {
