@@ -17,10 +17,7 @@ use reqwest::Client;
 type TeamResponse = schemas::team::TeamResponse;
 // type Team = schemas::team::Team;
 fn main() {
-    // functions::team::get_team(145);
-    // functions::get_schedule(Some(String::from("2022-07-01")));
     functions::get_roster(145);
-
 }
 
 #[tokio::main]

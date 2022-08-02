@@ -2,9 +2,12 @@ use pyo3::prelude::*;
 use serde::{Deserialize, Serialize};
 use chrono::{Date,DateTime, Datelike};
 
+// use crate::stats;
 use crate::schemas::generics::{Position, Dexterity};
+use crate::stats::stat_types::StatsResponse;
 
 const BASE: &str = "https://statsapi.mlb.com";
+
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -96,9 +99,13 @@ pub struct Person {
 
 #[pymethods]
 impl Person {
-    fn get_stats(&self,stat_type:&str,season:Option<usize>,groups:Option<Vec<String>>) {
+    pub fn get_stats(
+        &self,
+        stat_type:&str,
+        season:Option<usize>,
+        groups:Option<Vec<String>>) -> Option<StatsResponse> {
 
-        let group_param = match groups {
+        let group_param: String = match groups {
             Some(groups) => {
                 groups.join(",")
             }
@@ -133,15 +140,16 @@ impl Person {
             query_path = query_path,
         );
 
-
         let response = reqwest::blocking::get(url);
 
         if let Ok(response) = response {
-            if let Ok(response_text) = response.text() {
-                println!("{:#}",response_text);
-            }
-        }
+            let stat_resp: reqwest::Result<StatsResponse> = response.json();
+            if let Ok(stat_resp) = stat_resp {
+                return Some(stat_resp)
+            };
+        };
 
+        None
 
     }   
 }

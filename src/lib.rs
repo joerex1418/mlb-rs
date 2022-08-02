@@ -1,12 +1,6 @@
 use people::Person;
 use pyo3::{prelude::*};
-use rosters::rosters::RosterResponse;
-// use reqwest::blocking::get;
-// use serde:: {Deserialize, Serialize};
-// use serde_json as sj;
-// use pyo3::types::{PyDict};
-// use serde_json;
-// use pythonize::{pythonize};
+use rosters::RosterResponse;
 
 mod functions;
 mod schemas;
@@ -15,6 +9,9 @@ mod people;
 mod stats;
 
 type ScheduleResponse = schemas::schedule::ScheduleResponse;
+
+#[allow(unused)]
+#[allow(dead_code)]
 
 #[pyfunction]
 fn testing() {

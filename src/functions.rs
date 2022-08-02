@@ -1,16 +1,13 @@
-// use reqwest::Response;
-// use reqwest::Error;
 #[allow(unused)]
 #[allow(dead_code)]
 
 use pyo3::IntoPy;
-use reqwest::Request;
 
 use crate::people::{PersonResponse, Person};
 
 use crate::schemas::team::TeamResponse;
 use crate::{schemas::schedule::ScheduleResponse};
-use crate::rosters::rosters::RosterResponse;
+use crate::rosters::RosterResponse;
 
 pub fn get_team(team_id: usize) {
     let url: String = format!(
@@ -36,8 +33,6 @@ pub fn get_person(person_id: usize) -> Option<Person> {
     );
 
     let response = reqwest::blocking::get(url);
-
-    
 
     if let Ok(response) = response {
         let json_resp: reqwest::Result<PersonResponse> = response.json();
