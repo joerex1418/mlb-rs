@@ -1,7 +1,7 @@
 use pyo3::prelude::*;
 use serde::{Deserialize,Serialize};
 
-use crate::schemas::{
+use crate::objects::schemas::{
     generics::{Position, TeamGeneric}, 
     team::LeagueGeneric
 };
@@ -68,7 +68,7 @@ pub struct GroupType {
 pub mod types {
     use pyo3::prelude::*;
     use serde::{Deserialize, Serialize};
-    use crate::schemas::generics::Position;
+    use crate::objects::schemas::generics::Position;
 
     #[pyclass]
     #[derive(Deserialize, Serialize, Debug, Clone)]

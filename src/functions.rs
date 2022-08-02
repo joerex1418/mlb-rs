@@ -3,11 +3,12 @@
 
 use pyo3::IntoPy;
 
-use crate::people::{PersonResponse, Person};
-
-use crate::schemas::team::TeamResponse;
-use crate::{schemas::schedule::ScheduleResponse};
-use crate::rosters::RosterResponse;
+use crate::{
+    objects::people::{PersonResponse, Person},
+    objects::schemas::schedule::ScheduleResponse,
+    objects::schemas::team::TeamResponse
+};
+use crate::objects::rosters::RosterResponse;
 
 #[allow(unused)]
 pub fn get_team(team_id: usize) {

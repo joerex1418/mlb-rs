@@ -128,7 +128,7 @@ pub mod team {
 pub mod schedule {
     use pyo3::prelude::*;
     use serde::{Deserialize, Serialize};
-    use crate::schemas::generics::TeamGeneric;
+    use super::generics::TeamGeneric;
 
     #[pyclass]
     #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]

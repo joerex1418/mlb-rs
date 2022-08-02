@@ -1,7 +1,7 @@
 use pyo3::prelude::*;
 use serde::{Deserialize,Serialize};
 
-use crate::schemas::generics::Position;
+use crate::objects::schemas::generics::Position;
 
 #[pyclass]
 #[derive(Deserialize, Serialize, Debug, Clone)]

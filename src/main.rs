@@ -1,8 +1,7 @@
 mod utils;
 mod functions;
-mod schemas;
-mod rosters;
-mod people;
+mod objects;
+// mod people;
 mod stats;
 
 use std::vec;
@@ -15,7 +14,7 @@ use reqwest::Client;
 #[allow(unused)]
 #[allow(dead_code)]
 
-type TeamResponse = schemas::team::TeamResponse;
+type TeamResponse = objects::schemas::team::TeamResponse;
 // type Team = schemas::team::Team;
 fn main() {
     functions::get_roster(145);

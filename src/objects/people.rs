@@ -4,7 +4,7 @@ use chrono::{Datelike};
 
 // use crate::stats;
 use crate::utils::*;
-use crate::schemas::generics::{Position, Dexterity};
+use crate::objects::schemas::generics::{Position, Dexterity};
 use crate::stats::stats::StatsResponse;
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
@@ -12,6 +12,7 @@ use crate::stats::stats::StatsResponse;
 pub struct PersonResponse {
     pub people: Vec<Person>
 }
+
 
 #[pyclass]
 #[derive(Deserialize, Serialize, Debug, Clone)]
