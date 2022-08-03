@@ -118,6 +118,77 @@ pub mod generics {
         #[pyo3(get, set)]
         pub link: String
     }
+
+    #[pyclass]
+    #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+    #[serde(rename_all = "camelCase")]
+    pub struct StreakGeneric {
+        #[pyo3(get,set)]
+        pub streak_type: String,
+        #[pyo3(get,set)]
+        pub streak_number: usize,
+        #[pyo3(get,set)]
+        pub streak_code: String,
+    }
+
+    pub mod records {
+        use pyo3::prelude::*;
+        use serde::{Deserialize, Serialize};
+        use super::{LeagueGeneric};
+
+        #[pyclass]
+        #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+        pub struct RecordGeneric {
+            #[pyo3(get, set)]
+            pub wins: usize,
+            #[pyo3(get, set)]
+            pub losses: usize,
+            #[pyo3(get, set)]
+            pub pct: String
+        }
+    
+        #[pyclass]
+        #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+        pub struct RecordType {
+            #[pyo3(get, set)]
+            pub wins: usize,
+            #[pyo3(get, set)]
+            pub losses: usize,
+            #[pyo3(get, set)]
+            pub r#type: String,
+            #[pyo3(get, set)]
+            pub pct: String
+        }
+    
+        #[pyclass]
+        #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+        pub struct RecordLeague {
+            #[pyo3(get,set)]
+            pub wins: usize,
+            #[pyo3(get,set)]
+            pub losses: usize,
+            #[pyo3(get,set)]
+            pub pct: String,
+            #[pyo3(get,set)]
+            pub league: LeagueGeneric,
+        }
+    
+        #[pyclass]
+        #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+        pub struct RecordDivision {
+            #[pyo3(get,set)]
+            pub wins: usize,
+            #[pyo3(get,set)]
+            pub losses: usize,
+            #[pyo3(get,set)]
+            pub pct: String,
+            #[pyo3(get,set)]
+            pub division: LeagueGeneric,
+        }
+        
+    }
+
+
 }
     
 pub mod team {
@@ -204,7 +275,10 @@ pub mod team {
 pub mod schedule {
     use pyo3::prelude::*;
     use serde::{Deserialize, Serialize};
-    use super::generics::TeamGeneric;
+    use super::generics::{
+        TeamGeneric, 
+        records::RecordGeneric
+    };
 
     #[pyclass]
     #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -297,7 +371,7 @@ pub mod schedule {
         #[pyo3(get, set)]
         pub score: Option<usize>,
         #[pyo3(get, set)]
-        pub league_record: LeagueRecord,
+        pub league_record: RecordGeneric,
         #[pyo3(get, set)]
         pub is_winner: Option<bool>,
         #[pyo3(get, set)]
@@ -322,31 +396,21 @@ pub mod schedule {
         }
     }
 
-    #[pyclass]
-    #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-    pub struct LeagueRecord {
-        #[pyo3(get, set)]
-        pub wins: usize,
-        #[pyo3(get, set)]
-        pub losses: usize,
-        #[pyo3(get, set)]
-        pub pct: String
-    }
-    
 
 }
 
 pub mod standings {
     use pyo3::prelude::*;
     use serde::{Deserialize, Serialize};
-
-    use super::generics::LeagueCompact;
+    use super::generics::{LeagueCompact, TeamGeneric, StreakGeneric};
+    use super::generics::records::{RecordType, RecordDivision, RecordLeague};
 
     #[pyclass]
     #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
     #[serde(rename_all = "camelCase")]
     pub struct StandingsResponse {
-        records: Vec<Record>
+        #[pyo3(get,set)]
+        pub records: Vec<Record>
     }
 
     #[pyclass]
@@ -354,14 +418,76 @@ pub mod standings {
     #[serde(rename_all = "camelCase")]
     pub struct Record {
         #[pyo3(get,set)]
-        standings_type: String,
+        pub standings_type: String,
         #[pyo3(get,set)]
-        league: LeagueCompact,
+        pub league: LeagueCompact,
         #[pyo3(get,set)]
-        division: Option<LeagueCompact>,
+        pub division: Option<LeagueCompact>,
         #[pyo3(get,set)]
-        last_updated: String,
+        pub last_updated: String,
+        #[pyo3(get,set)]
+        pub team_records: Vec<TeamRecord>, 
+        
+    }
 
+    #[pyclass]
+    #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+    #[serde(rename_all = "camelCase")]
+    pub struct TeamRecord {
+        #[pyo3(get,set)]
+        pub streak: StreakGeneric,
+        #[pyo3(get,set)]
+        pub team: TeamGeneric,
+        #[pyo3(get,set)]
+        pub games_played: usize,
+        #[pyo3(get,set)]
+        pub games_back: String,
+        #[pyo3(get,set)]
+        pub league_games_back: String,
+        #[pyo3(get,set)]
+        pub wild_card_games_back: String,
+        #[pyo3(get,set)]
+        pub runs_allowed: usize,
+        #[pyo3(get,set)]
+        pub runs_scored: usize,
+        #[pyo3(get,set)]
+        pub records: RecordSplits,
+        #[pyo3(get,set)]
+        pub league_record: StandingsRecord,
+        #[pyo3(get,set)]
+        pub wins: usize,
+        #[pyo3(get,set)]
+        pub losses: usize,
+        #[pyo3(get,set)]
+        pub winning_percentage: String,
+    }
+
+    #[pyclass]
+    #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+    #[serde(rename_all = "camelCase")]
+    pub struct RecordSplits {
+        #[pyo3(get,set)]
+        pub split_records: Vec<RecordType>,
+        #[pyo3(get, set)]
+        pub division_records: Option<Vec<RecordDivision>>,
+        #[pyo3(get,set)]
+        pub overall_records: Vec<RecordType>,
+        #[pyo3(get, set)]
+        pub league_records: Vec<RecordLeague>,
+    }
+
+    #[pyclass]
+    #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+    #[serde(rename_all = "camelCase")]
+    pub struct StandingsRecord {
+        #[pyo3(get,set)]
+        pub wins: usize,
+        #[pyo3(get,set)]
+        pub losses: usize,
+        #[pyo3(get,set)]
+        pub ties: usize,
+        #[pyo3(get,set)]
+        pub pct: String
     }
 
 }
@@ -369,7 +495,6 @@ pub mod standings {
 pub mod games {
     use pyo3::prelude::*;
     use serde::{Deserialize, Serialize};
-
 
     #[pyclass]
     #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]

@@ -57,9 +57,6 @@ pub fn get_person(person_id: usize) -> Option<Person> {
     };
 
     None
-
-
-
 }
 
 #[allow(unused)]
@@ -116,29 +113,59 @@ pub fn get_schedule(date: Option<String>) -> Option<ScheduleResponse> {
 pub fn get_league_standings(season:Option<usize>) {
     // pub fn get_league_standings(season:Option<usize>) -> Option<LeagueStandingsResponse> {
     // hydrate=league,division
-    
-    let url: String = match season {
+    let season: String = match season {
         Some(season) => {
-            format!(
-                "{base}/api/v1/standings?season={season}&leagueId=103,104&standingsType=byDivision&hydrate=league,division",
-                base = BASE,
-                season = season.to_string(),
-            )
+            season.to_string()
         }
         None => {
-            format!(
-                "{base}/api/v1/standings?season={season}&leagueId=103,104&standingsType=byDivision&hydrate=league,division",
-                base = BASE,
-                season = chrono::Utc::now().year()
-            )
+            chrono::Utc::now().year().to_string()
         }
     };
+
+    let url: String = format!(
+        "{base}/api/v1/standings?season={season}&leagueId=103,104&standingsType=byLeague&hydrate=league,division",
+        base = BASE,
+        season = season
+    );
 
     let response = reqwest::blocking::get(url);
 
     if let Ok(resp) = response {
-        let standings_resp: reqwest::Result<StandingsResponse> = resp.json();
-        println!("{:#?}",standings_resp);
+        let standings_json: reqwest::Result<StandingsResponse> = resp.json();
+        if let Ok(standings_resp) = standings_json {
+            println!("{:#?}",standings_resp.records);
+        }
+    }
+
+
+}
+
+#[allow(unused)]
+pub fn get_division_standings(season:Option<usize>) {
+    // pub fn get_league_standings(season:Option<usize>) -> Option<LeagueStandingsResponse> {
+    // hydrate=league,division
+    let season: String = match season {
+        Some(season) => {
+            season.to_string()
+        }
+        None => {
+            chrono::Utc::now().year().to_string()
+        }
+    };
+
+    let url: String = format!(
+        "{base}/api/v1/standings?season={season}&leagueId=103,104&standingsType=byDivision&hydrate=league,division",
+        base = BASE,
+        season = season
+    );
+
+    let response = reqwest::blocking::get(url);
+
+    if let Ok(resp) = response {
+        let standings_json: reqwest::Result<StandingsResponse> = resp.json();
+        if let Ok(standings_resp) = standings_json {
+            println!("{:#?}",standings_resp.records);
+        }
     }
 
 
