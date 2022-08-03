@@ -8,6 +8,7 @@ edition = "2021"
 [lib]
 name = "mlbapi"
 crate-type = ["cdylib"]
+path = "src/lib.rs"
 
 [dependencies]
 pyo3 = { version = "0.16.4", features = ["extension-module"] }

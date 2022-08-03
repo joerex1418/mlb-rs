@@ -194,6 +194,10 @@ pub mod generics {
 pub mod team {
     use pyo3::prelude::*;
     use serde::{Deserialize, Serialize};
+    use super::{
+        venue::Venue,
+        generics::LeagueGeneric,
+    };
     use crate::utils::BASE;
 
     #[pyclass]
@@ -215,10 +219,10 @@ pub mod team {
         pub link: String,
         #[pyo3(get, set)]
         pub season: usize,
+        #[pyo3(get,set)]
+        pub venue: Venue,
         #[pyo3(get, set)]
-        pub venue: super::generics::MlbCompact,
-        #[pyo3(get, set)]
-        pub league: super::generics::LeagueGeneric,
+        pub league: LeagueGeneric,
         #[pyo3(get, set)]
         pub team_code: String,
         #[pyo3(get, set)]
@@ -285,8 +289,6 @@ pub mod schedule {
     #[serde(rename_all = "camelCase")]
     pub struct ScheduleResponse {
         #[pyo3(get, set)]
-        pub copyright: String,
-        #[pyo3(get, set)]
         pub total_items: usize,
         #[pyo3(get, set)]
         pub total_events: usize,
@@ -332,8 +334,9 @@ pub mod schedule {
         #[pyo3(get, set)]
         pub official_date: String,
         #[pyo3(get, set)]
-        pub teams: Teams
-
+        pub teams: Teams,
+        #[pyo3(get, set)]
+        pub tickets: Option<Vec<GameTicket>>,
     }
 
     #[pyclass]
@@ -396,7 +399,32 @@ pub mod schedule {
         }
     }
 
+    #[pyclass]
+    #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+    #[serde(rename_all = "camelCase")]
+    pub struct GameTicket {
+        #[pyo3(get, set)]
+        pub ticket_type: String,
+        #[pyo3(get, set)]
+        pub ticket_links: Option<TicketLinks>,
+    }
 
+    #[pyclass]
+    #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+    #[serde(rename_all = "camelCase")]
+    pub struct TicketLinks {
+        #[pyo3(get, set)]
+        pub home: Option<String>,
+        #[pyo3(get, set)]
+        pub away: Option<String>,
+    }
+
+    #[pyclass]
+    #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+    #[serde(rename_all = "camelCase")]
+    pub struct NextGameInfo {
+
+    }
 }
 
 pub mod standings {
@@ -492,14 +520,88 @@ pub mod standings {
 
 }
 
-pub mod games {
+pub mod venue {
     use pyo3::prelude::*;
-    use serde::{Deserialize, Serialize};
+    use serde::{Deserialize,Serialize};
 
     #[pyclass]
     #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
     #[serde(rename_all = "camelCase")]
-    pub struct Game {
-
+    pub struct VenueGeneric {
+        #[pyo3(get, set)]
+        pub id: usize,
+        #[pyo3(get, set)]
+        pub name: Option<String>,
     }
+
+    #[pyclass]
+    #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+    #[serde(rename_all = "camelCase")]
+    pub struct Venue {
+        #[pyo3(get, set)]
+        pub id: usize,
+        #[pyo3(get, set)]
+        pub name: Option<String>,
+        #[pyo3(get, set)]
+        pub link: Option<String>,
+        #[pyo3(get, set)]
+        pub location: VenueLocation,
+        #[pyo3(get, set)]
+        pub field_info: FieldInfo,
+    }
+
+    #[pyclass]
+    #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+    #[serde(rename_all = "camelCase")]
+    pub struct VenueLocation {
+        #[pyo3(get, set)]
+        pub address1: Option<String>,
+        #[pyo3(get, set)]
+        pub address2: Option<String>,
+        #[pyo3(get, set)]
+        pub state: Option<String>,
+        #[pyo3(get, set)]
+        pub state_abbrev: Option<String>,
+        #[pyo3(get, set)]
+        pub postal_code: Option<String>,
+        #[pyo3(get, set)]
+        pub country: Option<String>,
+        #[pyo3(get, set)]
+        pub phone: Option<String>,
+        #[pyo3(get, set)]
+        pub default_coordinates: Option<VenueCoords>,
+    }
+
+    #[pyclass]
+    #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+    #[serde(rename_all = "camelCase")]
+    pub struct FieldInfo {
+        #[pyo3(get, set)]
+        pub capacity: Option<usize>,
+        #[pyo3(get, set)]
+        pub turf_type: Option<String>,
+        #[pyo3(get, set)]
+        pub roof_type: Option<String>,
+        #[pyo3(get, set)]
+        pub left_line: Option<usize>,
+        #[pyo3(get, set)]
+        pub left_center: Option<usize>,
+        #[pyo3(get, set)]
+        pub center: Option<usize>,
+        #[pyo3(get, set)]
+        pub right_center: Option<usize>,
+        #[pyo3(get, set)]
+        pub right_line: Option<usize>,
+    }
+
+    #[pyclass]
+    #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+    #[serde(rename_all = "camelCase")]
+    pub struct VenueCoords {
+        #[pyo3(get, set)]
+        pub latitude: f64,
+        #[pyo3(get, set)]
+        pub longitude: f64
+    }
+
 }

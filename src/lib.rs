@@ -19,9 +19,41 @@ use {
 
 #[pyclass]
 #[derive(Deserialize,Serialize)]
-pub struct Player {
+struct Player {
     name: String,
     pos: String
+}
+
+pub mod rust {
+    use crate::objects::people::Person;
+    use crate::functions::{
+        get_person as _get_person,
+        get_schedule as _get_schedule,
+        get_roster as _get_roster,
+        get_team as _get_team
+    };
+    use crate::objects::rosters::RosterResponse;
+    use crate::objects::schemas::{
+        team,
+        schedule::ScheduleResponse,
+    };
+
+    pub fn get_person(person_id:usize) -> Option<Person> {
+        _get_person(person_id)
+    }
+
+    pub fn get_team(team_id: usize) -> Option<team::Team> {
+        _get_team(team_id)
+    }
+
+    pub fn get_schedule(date: Option<String>) -> Option<ScheduleResponse> {
+        _get_schedule(date)
+    }
+    
+    pub fn get_roster(team_id: usize) -> Option<RosterResponse> {
+        _get_roster(team_id)
+    }
+
 }
 
 #[pyfunction]
@@ -29,7 +61,7 @@ fn testing() -> Py<PyAny> {
     let python: GILGuard = Python::acquire_gil();
     let py: Python = python.python();
 
-    let player = Player { name:"Joe".to_string(),pos:"CF".to_string() };
+    let player: Player = Player { name:"Joe".to_string(),pos:"CF".to_string() };
 
     player.into_py(py)
     // py_person.unwrap()
@@ -86,6 +118,7 @@ fn mlbapi(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(get_person, m)?)?;
     m.add_function(wrap_pyfunction!(get_roster, m)?)?;
     m.add_function(wrap_pyfunction!(get_schedule, m)?)?;
+    
     Ok(())
 }
 

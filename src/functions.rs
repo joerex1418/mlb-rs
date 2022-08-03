@@ -11,16 +11,27 @@ use crate::{
         standings::StandingsResponse,
         schedule::ScheduleResponse
     },
+    objects::rosters::RosterResponse,
     utils::BASE,
 };
-use crate::objects::rosters::RosterResponse;
+
+#[allow(unused)]
+pub fn get_next_game(team_id: usize) {
+    let url: String = format!(
+        "https://statsapi.mlb.com/api/v1/teams/{team_id}?hydrate={hydrations}",
+        team_id = team_id.to_string(),
+        hydrations = "nextSchedule(limit=1),game(tickets,atBatTickets)"
+    );
+
+    let response = reqwest::blocking::get(url);
+}
 
 #[allow(unused)]
 pub fn get_team(team_id: usize) -> Option<Team> {
     let url: String = format!(
-        "https://statsapi.mlb.com/api/v1/teams/{team_id}",
-
-        team_id = team_id.to_string()
+        "https://statsapi.mlb.com/api/v1/teams/{team_id}?hydrate={hydrations}",
+        team_id = team_id.to_string(),
+        hydrations = "venue(location,fieldInfo),nextSchedule(limit=1),game(tickets,atBatTickets)"
     );
 
     let response = reqwest::blocking::get(url);
@@ -82,15 +93,21 @@ pub fn get_roster(team_id: usize) -> Option<RosterResponse> {
 
 #[allow(unused)]
 pub fn get_schedule(date: Option<String>) -> Option<ScheduleResponse> {
-    let url = match date {
+    let hydrations: &str = "game(tickets,atBatTickets)";
+
+    let url: String = match date {
         Some(date) => {
             format!(
-                "https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={}",
-                date.to_string()
+                "https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={}&hydrate={}",
+                date.to_string(),
+                hydrations
             )
         }
         None => {
-            "https://statsapi.mlb.com/api/v1/schedule?sportId=1".to_string()
+            format!(
+                "https://statsapi.mlb.com/api/v1/schedule?sportId=1&hydrate={}",
+                hydrations
+            )
         }
     };
     
@@ -170,3 +187,4 @@ pub fn get_division_standings(season:Option<usize>) {
 
 
 }
+

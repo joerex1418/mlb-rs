@@ -16,10 +16,12 @@ use objects::schemas::{
 };
 
 fn main() {
+    let sched_resp = functions::get_schedule(None);
+    println!("{:#?}",sched_resp);
     // let team:Option<Team> = functions::get_team(145);
     // println!("{:#?}",team);
     // functions::get_league_standings(Some(2022));
-    functions::get_division_standings(Some(2022));
+    // functions::get_division_standings(Some(2022));
 
 }
 
