@@ -2,6 +2,7 @@ mod utils;
 mod functions;
 mod objects;
 mod stats;
+mod api;
 
 use pyo3::{prelude::*};
 

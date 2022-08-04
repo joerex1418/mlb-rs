@@ -10,8 +10,6 @@ use crate::objects::{
 #[serde(rename_all = "camelCase")]
 pub struct RosterResponse {
     #[pyo3(get, set)]
-    pub copyright: String,
-    #[pyo3(get, set)]
     pub roster: Vec<RosterEntry>
 }
 

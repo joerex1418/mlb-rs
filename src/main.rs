@@ -1,8 +1,8 @@
-
 mod utils;
 mod functions;
 mod objects;
 mod stats;
+mod api;
 
 use std::vec;
 use std::time::{Instant};
@@ -16,8 +16,11 @@ use objects::schemas::{
 };
 
 fn main() {
-    let sched_resp = functions::get_schedule(None);
-    println!("{:#?}",sched_resp);
+    api::rosters::get_forty_man(145);
+    // api::get_teams();
+
+    // let sched_resp = functions::get_schedule(None);
+    // println!("{:#?}",sched_resp);
     // let team:Option<Team> = functions::get_team(145);
     // println!("{:#?}",team);
     // functions::get_league_standings(Some(2022));
