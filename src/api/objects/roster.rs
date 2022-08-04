@@ -14,17 +14,17 @@ pub struct RosterResponse {
 
 impl fmt::Display for RosterResponse {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let roster_title: String = format!("{} Roster\n",self.roster_type);
-        let mut result: String = String::from(roster_title.as_str());
-        for entry in &self.roster {
-            let string: String = format!(
-                "{abbrev}\t{person}\n", 
-                abbrev = entry.position.abbreviation,
-                person = entry.person.full_name
-            );
-            result.push_str(string.as_str());
-        }
-        write!(f,"{}",result)
+        // let roster_title: String = format!("{}\n",self.roster_type);
+        // let mut result: String = String::from(roster_title.as_str());
+        // for entry in &self.roster {
+        //     let string: String = format!(
+        //         "{abbrev}\t{person}\n", 
+        //         abbrev = entry.position.abbreviation,
+        //         person = entry.person.full_name
+        //     );
+        //     result.push_str(string.as_str());
+        // }
+        write!(f,"RosterResponse - [{}]",self.roster_type)
     }
 }
 
@@ -35,7 +35,7 @@ pub struct RosterEntry {
     pub jersey_number: Option<String>,
     pub position: super::Position,
     pub status: super::PersonStatus,
-    pub parent_team_id: usize
+    pub parent_team_id: Option<usize>,
 }
 
 impl fmt::Display for RosterEntry {

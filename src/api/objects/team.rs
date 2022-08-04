@@ -19,7 +19,7 @@ pub struct Team {
     pub name: String,
     pub link: String,
     pub season: usize,
-    pub venue: super::venue::Venue,
+    pub venue: super::venue::VenueGeneric,
     pub spring_venue: super::venue::SpringVenue,
     pub team_code: String,
     pub file_code: String,

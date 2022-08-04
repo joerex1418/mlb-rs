@@ -16,7 +16,11 @@ use objects::schemas::{
 };
 
 fn main() {
-    api::rosters::get_forty_man(145);
+    let roster = api::rosters::get_roster(145, "40Man", 2021);
+
+    if let Some(roster) = roster {
+        println!("{}", roster);
+    }
     // api::get_teams();
 
     // let sched_resp = functions::get_schedule(None);
