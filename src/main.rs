@@ -6,8 +6,10 @@ mod api;
 
 use std::vec;
 use std::time::{Instant};
+use colored::Colorize;
 use reqwest;
 use reqwest::Client;
+use clap::Parser;
 // use std::thread::sleep;
 
 #[allow(unused_imports)]
@@ -15,20 +17,68 @@ use objects::schemas::{
     team::{TeamResponse,Team}
 };
 
+#[derive(Parser)]
+struct Cli {
+    function: String,
+    param: Option<usize>,
+}
+
 fn main() {
-    let roster = api::rosters::get_roster(145, "40Man", 2021);
+    let args = Cli::parse();
+    
+    match args.function.as_str() {
+        "person" | "player" => {
+            if let Some(param) = args.param {
+                let person = api::get_person(param);
+                if let Some(person) = person {
+                    println!("{} {}",
+                        "MLB ID:".cyan().bold(),
+                        person.id.to_string());
+                    println!(
+                        "{} {:<20} {} {:<3}",
+                        "NAME:".cyan().bold(),
+                        person.full_fml_name,
+                        "POS:".cyan().bold(),
+                        person.primary_position.expect("").abbreviation
+                    );
+                    println!("{} {}\t{} {}",
+                        "BATS:".cyan().bold(),
+                        person.bat_side.description,
+                        "THROWS:".cyan().bold(),
+                        person.pitch_hand.description);
+                    println!(
+                        "{} {} in {}, {}",
+                        "BORN:".cyan().bold(),
+                        person.birth_date,
+                        person.birth_city,
+                        person.birth_country
+                    );
+                    let mut status = String::from("Not Active").magenta();
+                    if let Some(is_active) = person.active {
+                        if is_active { status = String::from("Active").green() }
+                    }
+                    println!(
+                        "{} {}",
+                        "STATUS:".cyan().bold(),
+                        status
+                    )
+                }
+            } else {
+                println!("ERROR: No \"person ID\" provided");
+            }
+        },
+        _ => println!("ERROR: No function provided")
+    };
 
-    if let Some(roster) = roster {
-        println!("{}", roster);
-    }
-    // api::get_teams();
+    // match arg_list.get(0) {
+    //     Some(_) => {
+    //         println!("{}", arg_list.get(1).unwrap())
+    //     },
+    //     _ => println!("doing nothing...")
+    // }
+    // println!("Here is the pattern: {:?}",args.pattern);
 
-    // let sched_resp = functions::get_schedule(None);
-    // println!("{:#?}",sched_resp);
-    // let team:Option<Team> = functions::get_team(145);
-    // println!("{:#?}",team);
-    // functions::get_league_standings(Some(2022));
-    // functions::get_division_standings(Some(2022));
+    // api::get_team_yby_standings(145);
 
 }
 
@@ -77,7 +127,6 @@ async fn multiple_requests() {
                         teams.push(json_string.unwrap());
                     }
                 }
-                
             }
         }
     }

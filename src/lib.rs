@@ -15,9 +15,6 @@ use {
     objects::rosters::RosterResponse
 };
 
-#[allow(unused)]
-#[allow(dead_code)]
-
 #[pyclass]
 #[derive(Deserialize,Serialize)]
 struct Player {
@@ -26,20 +23,28 @@ struct Player {
 }
 
 pub mod rust {
-    use crate::objects::people::Person;
-    use crate::functions::{
+    // use crate::objects::people::Person;
+    use crate::api;
+    use crate::api::{
         get_person as _get_person,
-        get_schedule as _get_schedule,
-        get_roster as _get_roster,
-        get_team as _get_team
+        get_teams as _get_teams,
+        rosters,
     };
-    use crate::objects::rosters::RosterResponse;
+    use crate::functions::{
+        // get_person as _get_person,
+        get_schedule as _get_schedule,
+        get_team as _get_team
+
+    };
     use crate::objects::schemas::{
         team,
         schedule::ScheduleResponse,
     };
 
-    pub fn get_person(person_id:usize) -> Option<Person> {
+    type APIPerson = api::objects::people::Person;
+    type APIRosterResponse = api::objects::roster::RosterResponse;
+
+    pub fn get_person(person_id:usize) -> Option<APIPerson> {
         _get_person(person_id)
     }
 
@@ -47,13 +52,37 @@ pub mod rust {
         _get_team(team_id)
     }
 
+    pub fn get_teams() {
+        _get_teams()
+    }
+
     pub fn get_schedule(date: Option<String>) -> Option<ScheduleResponse> {
         _get_schedule(date)
     }
-    
-    pub fn get_roster(team_id: usize) -> Option<RosterResponse> {
-        _get_roster(team_id)
+
+    pub fn get_roster(team_id: usize, roster_type: &str, season: usize) -> Option<APIRosterResponse> {
+        rosters::get_roster(team_id,roster_type,season)
     }
+
+    pub fn get_active_roster(team_id: usize) -> Option<APIRosterResponse> {
+        rosters::get_active(team_id)
+    }
+
+    pub fn get_forty_man(team_id: usize) -> Option<APIRosterResponse> {
+        rosters::get_forty_man(team_id)
+    }
+
+    pub fn get_full_season(team_id: usize) -> Option<APIRosterResponse> {
+        rosters::get_full_season(team_id)
+    }
+
+    pub fn get_full_roster(team_id: usize) -> Option<APIRosterResponse> {
+        rosters::get_full_roster(team_id)
+    }
+    
+    // pub fn get_roster(team_id: usize) -> Option<RosterResponse> {
+    //     _get_roster(team_id)
+    // }
 
 }
 

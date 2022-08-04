@@ -12,18 +12,56 @@ pub struct RosterResponse {
     pub roster_type: String,
 }
 
+#[allow(unused)]
+impl RosterResponse {
+    pub fn get_infielders(&self) -> Vec<RosterEntry> {
+        let mut filtered_roster: Vec<RosterEntry> = Vec::new();
+        for entry in self.roster.iter() {
+            let lc_type = entry.position.position_type.clone();
+            if lc_type.to_lowercase() == "infielder" {
+                filtered_roster.push(entry.clone());
+            }
+        }
+        filtered_roster
+    }
+
+    pub fn get_outfielders(&self) -> Vec<RosterEntry> {
+        let mut filtered_roster: Vec<RosterEntry> = Vec::new();
+        for entry in self.roster.iter() {
+            let lc_type = entry.position.position_type.clone();
+            if lc_type.to_lowercase() == "outfielder" {
+                filtered_roster.push(entry.clone());
+            }
+        }
+        filtered_roster
+    }
+
+    pub fn get_pitchers(&self) -> Vec<RosterEntry> {
+        let mut filtered_roster: Vec<RosterEntry> = Vec::new();
+        for entry in self.roster.iter() {
+            let lc_type = entry.position.position_type.clone();
+            if lc_type.to_lowercase() == "pitcher" {
+                filtered_roster.push(entry.clone());
+            }
+        }
+        filtered_roster
+    }
+
+    pub fn get_inactive(&self) -> Vec<RosterEntry> {
+        let mut filtered_roster: Vec<RosterEntry> = Vec::new();
+        for entry in self.roster.iter() {
+            if entry.status.description.as_str() != "Active" {
+                filtered_roster.push(entry.clone());
+            }
+        }
+        filtered_roster
+    }
+
+
+}
+
 impl fmt::Display for RosterResponse {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        // let roster_title: String = format!("{}\n",self.roster_type);
-        // let mut result: String = String::from(roster_title.as_str());
-        // for entry in &self.roster {
-        //     let string: String = format!(
-        //         "{abbrev}\t{person}\n", 
-        //         abbrev = entry.position.abbreviation,
-        //         person = entry.person.full_name
-        //     );
-        //     result.push_str(string.as_str());
-        // }
         write!(f,"RosterResponse - [{}]",self.roster_type)
     }
 }
@@ -35,11 +73,10 @@ pub struct RosterEntry {
     pub jersey_number: Option<String>,
     pub position: super::Position,
     pub status: super::PersonStatus,
-    pub parent_team_id: Option<usize>,
 }
 
 impl fmt::Display for RosterEntry {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f,"{}\t\t{}", self.position.code ,self.person.full_name)
+        write!(f,"{}\t{}", self.position.code ,self.person.full_name)
     }
 }

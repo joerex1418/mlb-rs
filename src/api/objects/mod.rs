@@ -18,6 +18,14 @@ pub struct PersonStatus {
 pub struct Position {
     pub code: String,
     pub name: String,
-    pub r#type: String,
+    #[serde(rename = "type")]
+    pub position_type: String,
     pub abbreviation: String
+}
+
+#[derive(Deserialize, Serialize, Debug, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct Dexterity {
+    pub code: String,
+    pub description: String
 }

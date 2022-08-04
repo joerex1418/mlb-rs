@@ -1,5 +1,5 @@
 [package]
-name = "mlbapi"
+name = "mlb"
 version = "0.1.0"
 edition = "2021"
 
@@ -11,12 +11,15 @@ crate-type = ["cdylib"]
 path = "src/lib.rs"
 
 [dependencies]
-pyo3 = { version = "0.16.4", features = ["extension-module"] }
+chrono = "0.4"
 reqwest = { version = "0.11.11", features = ["blocking", "json"]}
 openssl = { version = "0.10", features = ["vendored"] }
 tokio = { version = "1", features = ["full"] }
+futures = "0.3"
 serde = { version = "*", features = ["derive"] }
 serde_json = { version = "1.0" }
-chrono = "0.4"
+pyo3 = { version = "0.16.4", features = ["extension-module"] }
 pythonize = { version = "0.16.0" }
+clap = { version = "3.0", features = ["derive"] }
+colored = "2"
 
