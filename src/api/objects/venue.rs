@@ -26,7 +26,7 @@ pub struct VenueLocation {
     pub default_coordinates: Option<VenueCoords>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize,Deserialize,Debug,Clone,PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct FieldInfo {
     pub capacity: Option<usize>,
@@ -39,14 +39,14 @@ pub struct FieldInfo {
     pub right_line: Option<usize>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize,Deserialize,Debug,Clone,PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct VenueCoords {
     pub latitude: f64,
     pub longitude: f64
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize,Deserialize,Debug,Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct VenueGeneric {
     pub id: usize,
@@ -54,7 +54,7 @@ pub struct VenueGeneric {
     pub link: String,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize,Deserialize,Debug,Clone,PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct TimeZone {
     pub id: String,
@@ -62,7 +62,7 @@ pub struct TimeZone {
     pub tz: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize,Deserialize,Debug,Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct SpringVenue {
     pub id: usize,

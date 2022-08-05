@@ -34,3 +34,10 @@ pub struct Team {
     pub league: super::league::LeagueGeneric,
     pub division: Option<super::league::LeagueGeneric>,
 }
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct TeamGeneric {
+    pub id: usize,
+    pub name: String,
+}

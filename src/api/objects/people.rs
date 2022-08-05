@@ -56,7 +56,6 @@ pub struct Person {
     // pub roster_entries: Option<Vec<RosterEntry>>,
 }
 
-
 #[derive(Serialize,Deserialize,Debug,Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct PersonGeneric {

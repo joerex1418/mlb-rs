@@ -3,6 +3,7 @@ mod functions;
 mod objects;
 mod stats;
 mod api;
+mod cli;
 
 use std::vec;
 use std::time::{Instant};
@@ -20,69 +21,58 @@ use objects::schemas::{
 #[derive(Parser)]
 struct Cli {
     function: String,
-    param: Option<String>,
-    arg3: Option<String>,
+    mlb_id: Option<String>,
+    
+    #[clap(short,long)]
+    group: Option<String>,
+    #[clap(long)]
+    search: Option<String>,
+    #[clap(short,long)]
+    season: Option<String>,
+    #[clap(long)]
+    stats: Option<String>,
+    #[clap(short = 't', long = "type")]
+    stattype: Option<String>,
 }
 
 fn main() {
-    let args = Cli::parse();
+    let args: Cli = Cli::parse();
 
-    println!("\n{}\n", args.arg3.expect("nothing to see here"));
-    
-    match args.function.as_str() {
-        "person" | "player" => {
-            if let Some(param) = args.param {                
-                let param = param.parse::<usize>();
-                if let Ok(param) = param { 
-                    let person = api::get_person(param);
-                    if let Some(person) = person {
-                        println!("{} {}",
-                            "MLB ID:".cyan().bold(),
-                            person.id.to_string());
-                        println!(
-                            "{} {:<20} {} {:<3}",
-                            "NAME:".cyan().bold(),
-                            person.full_fml_name,
-                            "POS:".cyan().bold(),
-                            person.primary_position.expect("").abbreviation
-                        );
-                        println!("{} {}\t{} {}",
-                            "BATS:".cyan().bold(),
-                            person.bat_side.description,
-                            "THROWS:".cyan().bold(),
-                            person.pitch_hand.description);
-                        println!(
-                            "{} {} in {}, {}",
-                            "BORN:".cyan().bold(),
-                            person.birth_date,
-                            person.birth_city,
-                            person.birth_country
-                        );
-                        let mut status = String::from("Not Active").magenta();
-                        if let Some(is_active) = person.active {
-                            if is_active { status = String::from("Active").green() }
-                        }
-                        println!(
-                            "{} {}",
-                            "STATUS:".cyan().bold(),
-                            status
-                        )
-                    }
+    println!("{:<20} {:?}", "FUNCTION".yellow().bold(), &args.function);
+    println!("{:<20} {:?}", "MLB ID".yellow().bold(), &args.mlb_id.clone());
+    println!("{:<20} {:?}", "GROUP -g, --group".magenta(), &args.group.clone());
+    println!("{:<20} {:?}", "SEARCH --search".magenta(), &args.search.clone());
+    println!("{:<20} {:?}", "SEASON -s, --season".magenta(), &args.season.clone());
+    println!("{:<20} {:?}", "STATS --stats".magenta(), &args.stats.clone());
+    println!("{:<20} {:?}", "STAT TYPE --stattype".magenta(), &args.stats.clone());
+    println!("");
+
+    let i_feel_like_it: bool = true;
+
+    if i_feel_like_it {
+        match args.function.as_str() {
+            "person" | "player" => {
+                if let Some(search) = args.search {
+                    println!("Searching for: \"{}\"", search);
                 }
-            } else {
-                println!("ERROR: No \"person ID\" provided");
-            }
-        },
-        "game" => {
-        },
-        "team" => {
-
-        },
-        _ => println!("ERROR: No function provided")
-    };
-
+                else if let Some(stat_group) = args.stats {
+                    crate::cli::functions::person_stats(args.mlb_id, stat_group, args.stattype);
+                } else {
+                    crate::cli::functions::person(args.mlb_id);
+                }
+            },
+            "game" => {
+                crate::cli::functions::game(args.mlb_id);
+            },
+            "team" => {
+    
+            },
+            _ => println!("ERROR: No function provided")
+        };
+    }
 
 }
+
 
 #[allow(unused)]
 #[tokio::main]

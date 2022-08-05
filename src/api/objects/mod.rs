@@ -4,6 +4,7 @@ pub mod team;
 pub mod league;
 pub mod venue;
 pub mod roster;
+pub mod stats;
 
 use serde::{Serialize,Deserialize};
 
