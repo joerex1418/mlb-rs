@@ -1,3 +1,4 @@
+pub mod game;
 pub mod people;
 pub mod team;
 pub mod league;

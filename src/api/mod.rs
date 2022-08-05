@@ -38,7 +38,7 @@ pub fn get_teams() {
 }
 
 #[allow(unused)]
-pub fn get_person(person_id:usize) -> Option<Person> {
+pub fn get_person(person_id: usize) -> Option<Person> {
     let url: String = format!(
         "{base}/api/v1/people/{person_id}?hydrate={hydrations}",
         base = BASE,
