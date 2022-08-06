@@ -13,15 +13,15 @@ This library is very much in its early stages of development. There are only a f
 
 ## Getting Started
 ### 1. Clone the repository
-```rust
+```bash
 git clone https://github.com/joerex1418/mlbapi.git
 ```
 ### 2. Change Directory
-```rust
+```bash
 cd mlbapi
 ```
 ### 3. Install the binary
-```rust
+```bash
 cargo install --path .
 ```
 
