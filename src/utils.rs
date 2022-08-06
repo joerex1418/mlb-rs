@@ -1,5 +1,3 @@
-use futures::future::Either;
-
 pub const BASE: &str = "https://statsapi.mlb.com";
 
 // pub mod league {

@@ -7,7 +7,7 @@ mod cli;
 
 use std::vec;
 use std::time::{Instant};
-use colored::Colorize;
+// use colored::Colorize;
 use reqwest;
 use reqwest::Client;
 use clap::Parser;
@@ -38,14 +38,14 @@ struct Cli {
 fn main() {
     let args: Cli = Cli::parse();
 
-    println!("{:<20} {:?}", "FUNCTION".yellow().bold(), &args.function);
-    println!("{:<20} {:?}", "MLB ID".yellow().bold(), &args.mlb_id.clone());
-    println!("{:<20} {:?}", "GROUP -g, --group".magenta(), &args.group.clone());
-    println!("{:<20} {:?}", "SEARCH --search".magenta(), &args.search.clone());
-    println!("{:<20} {:?}", "SEASON -s, --season".magenta(), &args.season.clone());
-    println!("{:<20} {:?}", "STATS --stats".magenta(), &args.stats.clone());
-    println!("{:<20} {:?}", "STAT TYPE --stattype".magenta(), &args.stats.clone());
-    println!("");
+    // println!("{:<20} {:?}", "FUNCTION".yellow().bold(), &args.function);
+    // println!("{:<20} {:?}", "MLB ID".yellow().bold(), &args.mlb_id.clone());
+    // println!("{:<20} {:?}", "GROUP -g, --group".magenta(), &args.group.clone());
+    // println!("{:<20} {:?}", "SEARCH --search".magenta(), &args.search.clone());
+    // println!("{:<20} {:?}", "SEASON -s, --season".magenta(), &args.season.clone());
+    // println!("{:<20} {:?}", "STATS --stats".magenta(), &args.stats.clone());
+    // println!("{:<20} {:?}", "STAT TYPE --stattype".magenta(), &args.stats.clone());
+    // println!("");
 
     let i_feel_like_it: bool = true;
 

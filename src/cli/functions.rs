@@ -4,7 +4,6 @@ use reqwest;
 use crate::{
     api,
     utils::BASE,
-    functions::stat_abbrv,
 };
 
 type APIStatResponse = crate::api::objects::stats::StatsResponse;
@@ -96,9 +95,144 @@ pub fn person_stats(mlb_id: Option<String>, stat_group: String, stat_type: Optio
 
         if let Ok(response) = response {
             let stats: reqwest::Result<APIStatResponse> = response.json();
+
             if let Ok(stats) = stats {
-                println!("{:#?}", stats.get_pitching(false));
-                // println!("{:#}",serde_json::to_string_pretty(&stats).unwrap());
+                let mut divider = String::new();
+
+                if stat_group.to_lowercase() == "hitting" {
+                    let season = "Season".bright_yellow();
+                    let header = format!(
+                        "{:<8} | {:^4} {:^4} {:>4} {:^4} {:>4} {:^4} {:^4} {:^4} {:^4} {:>4} {:>4} {:>4}",
+                        season,   "G", "AB", "RBI", "H", "AVG", "2B", "HR", "K", "BB", "OBP","SLG", "OPS"
+                    );
+                    for _ in 0..header.to_string().len() {
+                        divider.push_str("-");
+                    }
+                    
+                    let stats = stats.get_hitting(false);
+                    
+                    // Player Name
+                    if let Some(split) = stats.get(0) {
+                        if let Some(player) = &split.player {
+                            println!(
+                                "{:<25} {} {}",
+                                player.full_name.bold(),
+                                stat_group.to_uppercase().bold(),
+                                "STATS".bold());
+                        }
+                    }
+                    // Header & Divider
+                    println!("{}\n{}",header,divider);
+                    // Stats
+                    for entry in stats {
+                        let stat = entry.stat;
+                        println!(
+                        "{:<8} | {:^4} {:^4} {:^4} {:^4} {:^4} {:^4} {:^4} {:^4} {:^4} {:^4} {:^4} {:^4}",
+                            entry.season.expect("-").cyan(),
+                            stat.games_played,
+                            stat.at_bats,
+                            stat.rbi,
+                            stat.hits,
+                            stat.avg,
+                            stat.doubles,
+                            stat.home_runs,
+                            stat.strike_outs,
+                            stat.base_on_balls,
+                            stat.obp,
+                            stat.slg,
+                            stat.ops,
+                        );
+                    }
+                }
+
+                if stat_group.to_lowercase() == "pitching" {
+                    let season = "Season".bright_yellow();
+                    let header = format!(
+                        "{:<8} | {:<4} {:<4} {:<4} {:<5} {:<5} {:<4} {:<4} {:<4}",
+                        season,   "G",  "W", "L", "ERA", "WHIP", "K",  "BB", "H"
+                    );
+                    for _ in 0..header.to_string().len() {
+                        divider.push_str("-");
+                    }
+                    
+                    let stats = stats.get_pitching(false);
+
+                    // Player Name
+                    if let Some(split) = stats.get(0) {
+                        if let Some(player) = &split.player {
+                            println!(
+                                "{:<25} {} {}",
+                                player.full_name.bold(),
+                                stat_group.to_uppercase().bold(),
+                                "STATS".bold());
+                        }
+                    }
+                    // Header & Divider
+                    println!("{}\n{}",header,divider);
+                    // Stats
+                    for entry in stats {
+                        let stat = entry.stat;
+                        println!(
+                        "{:<8} | {:<4} {:<4} {:<4} {:<5} {:<5} {:<4} {:<4} {:<4}",
+                            entry.season.expect("-").cyan(),
+                            stat.games_played,
+                            stat.wins,
+                            stat.losses,
+                            stat.era,
+                            stat.whip,
+                            stat.strike_outs,
+                            stat.base_on_balls,
+                            stat.hits
+                        );
+                    }
+    
+                }
+
+                if stat_group.to_lowercase() == "fielding" {
+                    let season = "Season".bright_yellow();
+                    let header = format!(
+                        "{:<8} | {:<4} {:<4} {:<4} {:<4} {:<4} {:<4} {:<5} {:<4} {:<4}",
+                        season, "Pos".yellow(), "G", "PO", "2B", "3B", "A", "Ch", "thE", "E"
+                    );
+                    for _ in 0..header.to_string().len() {
+                        divider.push_str("-");
+                    }
+                    
+                    let stats = stats.get_fielding(false);
+
+                    // Player Name
+                    if let Some(split) = stats.get(0) {
+                        if let Some(player) = &split.player {
+                            println!(
+                                "{:<25} {} {}",
+                                player.full_name.bold(),
+                                stat_group.to_uppercase().bold(),
+                                "STATS".bold());
+                        }
+                    }
+                    // Header & Divider
+                    println!("{}\n{}",header,divider);
+                    // Stats
+                    for entry in stats {
+                        let stat = entry.stat;
+                        println!(
+                        "{:<8} | {:<4} {:<4} {:<4} {:<4} {:<4} {:<4} {:<5} {:<4} {:<4}",
+                            entry.season.expect("-").cyan(),
+                            stat.position.abbreviation.yellow(),
+                            stat.games_played,
+                            stat.put_outs,
+                            stat.double_plays,
+                            stat.triple_plays,
+                            stat.assists,
+                            stat.chances.expect("-"),
+                            stat.throwing_errors.expect("-"),
+                            stat.errors,
+                        );
+                    }
+    
+                }
+
+
             } else {
                 println!("{:?}", stats)
             }

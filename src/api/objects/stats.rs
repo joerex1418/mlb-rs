@@ -4,6 +4,8 @@ use crate::objects::schemas::{
     generics::{Position, TeamGeneric,LeagueGeneric}
 };
 
+use super::people::PersonGeneric;
+
 type GenericStats = generic::GenericStats;
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
@@ -14,43 +16,86 @@ pub struct StatsResponse {
 
 #[allow(unused)]
 impl StatsResponse {
-    pub fn get_hitting(&self, get_advanced: bool) -> Option<HittingSplits> {
+    
+    pub fn get_hitting(&self, get_advanced: bool) -> Vec<HittingSplits> {
+        let mut splits_vec: Vec<HittingSplits> = Vec::new();
         for stat in self.stats.iter() {
             if stat.get_group() == "hitting" {
-                let string = serde_json::to_string(stat.splits.get(0).unwrap());
-                if let Ok(string) = string {
-                    let splits: serde_json::Result<HittingSplits> = serde_json::from_str(string.as_str());
-                    if let Ok(splits) = splits {
-                        return Some(splits);
+                for split in stat.splits.iter() {
+                    let string = serde_json::to_string(split);
+                    if let Ok(string) = string {
+                        let splits: serde_json::Result<HittingSplits> = serde_json::from_str(string.as_str());
+                        if let Ok(splits) = splits {
+                            splits_vec.push(splits);
+                        } else {
+                            println!("ERROR converting string to HittingSplits object: {:?}", splits);
+                        }
                     } else {
-                        println!("ERROR converting string to HittingSplits object: {:?}", splits);
+                        println!("ERROR converting object to string: {:?}", string);
                     }
-                } else {
-                    println!("ERROR converting object to string: {:?}", string);
+                
                 }
+
             }
         }
-        None
+        splits_vec.sort_by(|lhs,rhs| rhs.season.cmp(&lhs.season));
+        splits_vec
     }
 
-    pub fn get_pitching(&self, get_advanced: bool) -> Option<PitchingSplits> {
+    pub fn get_pitching(&self, get_advanced: bool) -> Vec<PitchingSplits> {
+        let mut splits_vec: Vec<PitchingSplits> = Vec::new();
+        
         for stat in self.stats.iter() {
             if stat.get_group() == "pitching" {
-                let string = serde_json::to_string(stat.splits.get(0).unwrap());
-                if let Ok(string) = string {
-                    let splits: serde_json::Result<PitchingSplits> = serde_json::from_str(string.as_str());
-                    if let Ok(splits) = splits {
-                        return Some(splits);
+                for split in stat.splits.iter() {
+                    let string = serde_json::to_string(split);
+                    if let Ok(string) = string {
+                        let splits: serde_json::Result<PitchingSplits> = serde_json::from_str(string.as_str());
+                        if let Ok(splits) = splits {
+                            splits_vec.push(splits);
+                        } else {
+                            println!("ERROR converting string to PitchingSplits object: {:?}", splits);
+                        }
                     } else {
-                        println!("ERROR converting string to PitchingSplits object: {:?}", splits);
+                        println!("ERROR converting object to string: {:?}", string);
                     }
-                } else {
-                    println!("ERROR converting object to string: {:?}", string);
+                
                 }
+
             }
         }
-        None
+        
+        splits_vec.sort_by(|lhs,rhs| rhs.season.cmp(&lhs.season));
+        splits_vec
     }
+
+    pub fn get_fielding(&self, get_advanced: bool) -> Vec<FieldingSplits> {
+        let mut splits_vec: Vec<FieldingSplits> = Vec::new();
+        
+        for stat in self.stats.iter() {
+            if stat.get_group() == "fielding" {
+                for split in stat.splits.iter() {
+                    let string = serde_json::to_string(split);
+                    if let Ok(string) = string {
+                        let splits: serde_json::Result<FieldingSplits> = serde_json::from_str(string.as_str());
+                        if let Ok(splits) = splits {
+                            splits_vec.push(splits);
+                        } else {
+                            println!("ERROR converting string to FieldingSplits object: {:?}", splits);
+                        }
+                    } else {
+                        println!("ERROR converting object to string: {:?}", string);
+                    }
+                
+                }
+
+            }
+        }
+        
+        splits_vec.sort_by(|lhs,rhs| rhs.season.cmp(&lhs.season));
+        splits_vec
+    }
+
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
@@ -83,6 +128,7 @@ pub struct Split {
     pub game_type: Option<String>,
     pub league: LeagueGeneric,
     pub position: Option<Position>,
+    pub player: Option<PersonGeneric>,
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
@@ -94,6 +140,7 @@ pub struct HittingSplits {
     pub game_type: Option<String>,
     pub league: LeagueGeneric,
     pub position: Option<Position>,
+    pub player: Option<PersonGeneric>,
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
@@ -105,6 +152,7 @@ pub struct PitchingSplits {
     pub game_type: Option<String>,
     pub league: LeagueGeneric,
     pub position: Option<Position>,
+    pub player: Option<PersonGeneric>,
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
@@ -116,6 +164,7 @@ pub struct FieldingSplits {
     pub game_type: Option<String>,
     pub league: LeagueGeneric,
     pub position: Option<Position>,
+    pub player: Option<PersonGeneric>,
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
