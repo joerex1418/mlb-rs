@@ -1,4 +1,4 @@
-# mlbapi
+# MLB StatsAPI
 Rust wrapper for interacting with the MLB Stats API - https://statsapi.mlb.com
 
 ## Copyright Notice
@@ -7,7 +7,7 @@ This repository and its author are not affiliated with the MLB in any way. Use o
 ## A few things to note
 For the time being, you'll need Rust's package manager - cargo - installed in order to install this properly
 
-I am planning to develop this as an extension for Python using [pyo3](https://github.com/PyO3/pyo3).
+I am planning to develop this as an extension for Python using [pyo3](https://github.com/PyO3/pyo3) in addition to a Rust crate.
 
 This library is very much in its early stages of development. There are only a few functions that have been written as of yet.
 
