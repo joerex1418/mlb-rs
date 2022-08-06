@@ -14,14 +14,25 @@ This library is very much in its early stages of development. There are only a f
 ## Getting Started
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/joerex1418/mlbapi.git
+$ git clone https://github.com/joerex1418/mlbapi.git
 ```
 ### 2. Change Directory
 ```bash
-cd mlbapi
+$ cd mlbapi
 ```
 ### 3. Install the binary
 ```bash
-cargo install --path .
+$ cargo install --path .
 ```
+
+## Example Usage
+```bash
+# Get basic information for a player given their official MLB Advanced Media ID
+$ mlb player 547989
+```
+```bash
+# Get stats for a player (Jose Abreu) by specifying a stat group after the `--stats` flag
+$ mlb player 547989 --stats hitting
+```
+
 
